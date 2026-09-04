@@ -19,10 +19,21 @@
         -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
       }
 
-      /* Full-viewport shell. Solid dark = clean loading backdrop + clean letterbox bars. */
+      /* Full-viewport shell. The game's own key art, blurred and darkened, sits behind the
+         loading icon and progress bar so a player can tell what is loading.
+
+         The blur is BAKED INTO THE JPG (Tools/bake_action_bg.py -> Tools/bake_loading_bg.py),
+         never done here with filter: blur() — a full-screen filter is expensive on phones and
+         this screen renders precisely while the device is busy downloading the wasm.
+
+         `cover`, never `100% 100%`: cover crops, stretch distorts, and portrait art pulled
+         across a wide letterboxed viewport looks broken.
+
+         #0e0e12 stays underneath as the fallback while the JPG is in flight, and it is what
+         paints the letterbox bars. It must match GROUND in bake_loading_bg.py. */
       #unity-container {
         position: fixed; inset: 0;
-        background: #0e0e12;
+        background: #0e0e12 url('TemplateData/loading-bg.jpg') center / cover no-repeat;
       }
 
       /* Canvas is positioned by JS (letterbox). Transparent so the backdrop shows through
@@ -114,7 +125,7 @@
       // has to happen here, in the template's own JS. Fire-and-forget: nothing awaits it and it
       // never blocks the Unity download. Every failure path lands on the baked-in icon.
       (function loadTenantIcon() {
-        var DEFAULT_API_BASE = "https://api.staging.g-b.store";   // staging
+        var DEFAULT_API_BASE = "https://api.g-b.store";   // production
         var DEFAULT_GAME_ID  = "FRUIT_MERGE";
         var FETCH_TIMEOUT_MS = 4000;
 
