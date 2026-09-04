@@ -125,7 +125,10 @@
       // has to happen here, in the template's own JS. Fire-and-forget: nothing awaits it and it
       // never blocks the Unity download. Every failure path lands on the baked-in icon.
       (function loadTenantIcon() {
-        var DEFAULT_API_BASE = "https://api.g-b.store";   // production
+        // Kept in step with GameBullEndpoints.BaseUrl by FMEnvironment.UseStaging /
+        // UseProduction. Edit that, not this — on its own, this only moves the loading-icon
+        // lookup and leaves the game itself pointed at the other environment.
+        var DEFAULT_API_BASE = "https://api.staging.g-b.store";   // staging
         var DEFAULT_GAME_ID  = "FRUIT_MERGE";
         var FETCH_TIMEOUT_MS = 4000;
 
